@@ -1,0 +1,13 @@
+[package]
+name = "rpi-v4l2r-test"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+drm = { git = "https://github.com/Smithay/drm-rs", rev = "dc5c544762ba4cccfa3ee14e7f8dde6722ff4f97" }
+v4l2r = { git = "https://github.com/Gnurou/v4l2r.git", rev = "1fbc84fbe2ae9db970c41fbdb4537b3753d146e1" }
+anyhow = "1.0.40"
+ctrlc = "3.1.9"
+aho-corasick = "0.7.15"
