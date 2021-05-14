@@ -46,39 +46,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "drm"
-version = "0.0.0"
-source = "git+https://github.com/Smithay/drm-rs?rev=dc5c544762ba4cccfa3ee14e7f8dde6722ff4f97#dc5c544762ba4cccfa3ee14e7f8dde6722ff4f97"
-dependencies = [
- "drm-ffi",
- "drm-fourcc",
- "nix",
-]
-
-[[package]]
-name = "drm-ffi"
-version = "0.0.0"
-source = "git+https://github.com/Smithay/drm-rs?rev=dc5c544762ba4cccfa3ee14e7f8dde6722ff4f97#dc5c544762ba4cccfa3ee14e7f8dde6722ff4f97"
-dependencies = [
- "drm-sys",
- "nix",
-]
-
-[[package]]
-name = "drm-fourcc"
-version = "2.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ebbf3a5ed4671aabffefce172ff43d69c1f27dd2c6aea28e5212a70f32ada0cf"
-
-[[package]]
-name = "drm-sys"
-version = "0.0.0"
-source = "git+https://github.com/Smithay/drm-rs?rev=dc5c544762ba4cccfa3ee14e7f8dde6722ff4f97#dc5c544762ba4cccfa3ee14e7f8dde6722ff4f97"
-dependencies = [
- "libc",
-]
-
-[[package]]
 name = "libc"
 version = "0.2.94"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -136,7 +103,6 @@ dependencies = [
  "aho-corasick",
  "anyhow",
  "ctrlc",
- "drm",
  "v4l2r",
 ]
 

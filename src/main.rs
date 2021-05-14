@@ -25,7 +25,8 @@ use v4l2r::{
 use aho_corasick::AhoCorasick;
 
 const DEVICE_PATH: &'static str = "/dev/video10";
-const VIDEO_FILE_PATH: &'static str = "FPS_test_1080p60_L4.2.h264";
+// const VIDEO_FILE_PATH: &'static str = "FPS_test_1080p60_L4.2.h264";
+const VIDEO_FILE_PATH: &'static str = "test.h264";
 
 fn main() {
     let mut stream =
@@ -128,7 +129,18 @@ fn main() {
     println!("Required size for output buffers: {}", output_buffer_size);
 
     // This shouldn't be needed, this is an RPI issue
-    v4l2r::ioctl::streamon(&decoder_file.as_raw_fd(), v4l2r::QueueType::VideoCaptureMplane).expect("Unable to start capture queue");
+    // This allocates a capture buffer so we can start the capture queue, so that then the RPI can trigger a format change event
+    // However now this capture buffer is no longer handled by the stateful decoder and is never dequeued when ready, effectively causing a deadlock
+    {
+        let mut buffer: v4l2r::ioctl::QBuffer<MmapHandle> = v4l2r::ioctl::QBuffer::default();
+        for _ in 0..1 {
+            buffer.planes.push(v4l2r::ioctl::QBufPlane::new(0));
+        }
+        let requested: v4l2r::ioctl::RequestBuffers = v4l2r::ioctl::reqbufs(&decoder_file.as_raw_fd(), v4l2r::QueueType::VideoCaptureMplane, v4l2r::memory::MemoryType::Mmap, 1).expect("Unable to queue buffer");
+        assert_eq!(requested.count, 1);
+        v4l2r::ioctl::qbuf(&decoder_file.as_raw_fd(), v4l2r::QueueType::VideoCaptureMplane, 0, buffer).expect("Unable to queue buffer");
+        v4l2r::ioctl::streamon(&decoder_file.as_raw_fd(), v4l2r::QueueType::VideoCaptureMplane).expect("Unable to start capture queue");
+    }
     
     let mut total_size: usize = 0;
     
@@ -146,6 +158,7 @@ fn main() {
                 panic!("{}", e);
             },
         };
+        println!("Got buffer to fill.");
 
         let mut mapping = v4l2_buffer
             .get_plane_mapping(0)
